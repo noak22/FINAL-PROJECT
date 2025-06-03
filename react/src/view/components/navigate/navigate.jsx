@@ -1,18 +1,35 @@
-import { Link } from 'react-router-dom';
-import styles from './navigate.module.css';
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../firebase/firebase";
+import styles from "./navigate.module.css";
+import logo from "../../../assets/logo.png";
 
 function Navigation() {
+  const [userEmail, setUserEmail] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserEmail(user.email);
+      } else {
+        setUserEmail("");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <header>
+    <header className={styles.header}>
       <div className={styles.topBar}>
         <div className={styles.settings}>
           <Link to="/setting">הגדרות</Link>
         </div>
 
         <div className={styles.logoContainer}>
-          <div className={styles.bookIcon}>S&S</div>
-          <p className={styles.logoText}>STUDENTS AND STUDIES</p>
-          <p className={styles.username}>שלום משתמש:</p>
+          <img src={logo} alt="Logo" className={styles.logoImage} />
+          <p className={styles.username}>שלום משתמש: {userEmail}</p>
         </div>
 
         <div className={styles.management}>
@@ -21,7 +38,7 @@ function Navigation() {
       </div>
 
       <nav className={styles.navbar}>
-        <Link to="/">דף הבית</Link>
+        <Link to="/home">דף הבית</Link>
         <Link to="/forums">פורום</Link>
         <Link to="/summaries">מאגר סיכומים</Link>
         <Link to="/saved-summaries">סיכומים שמורים</Link>

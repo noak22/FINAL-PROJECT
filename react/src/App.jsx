@@ -1,7 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navigation from './view/components/navigate/navigate';
-import './App.css';
-
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Login from './view/pages/login/1.jsx';
 import Signup from './view/pages/signup/2.jsx';
 import Home from './view/pages/home/3.jsx';
@@ -12,11 +9,15 @@ import HelpCenter from './view/pages/helpCenter/7.jsx';
 import PersonalZone from './view/pages/personalZone/8.jsx';
 import Setting from './view/pages/setting/9.jsx';
 import Management from './view/pages/management/10.jsx';
+import Navigation from './view/components/navigate/navigate.jsx';
 
 function App() {
+  const location = useLocation();
+  const hideNav = location.pathname === '/' || location.pathname === '/signup';
+
   return (
-    <Router>
-      <Navigation />
+    <>
+      {!hideNav && <Navigation />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -29,7 +30,7 @@ function App() {
         <Route path="/setting" element={<Setting />} />
         <Route path="/management" element={<Management />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
